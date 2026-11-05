@@ -1,4 +1,4 @@
-html_content = """<!DOCTYPE html>
+=html_content = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -125,13 +125,13 @@ html_content = """<!DOCTYPE html>
     <div class="card">
         <div class="header">
             <h1>Sufiyan's Custom AI</h1>
-            <p>Hello! I am Sufiyan's AI assistant. Ask me anything in English, Malayalam, Hindi, or Manglish!</p>
+            <p>Hello! Ask me anything in English, Malayalam, Hindi, or Manglish!</p>
             <div class="badge">Created by Sufiyan</div>
         </div>
 
         <div class="chat-box" id="chatBox">
             <div class="message ai">
-                Hello! Njan Sufiyante custom AI assistant aanu. Enthokke und visheshangal?
+                Hi! Enthokke und visheshangal?
             </div>
         </div>
 
@@ -147,7 +147,7 @@ html_content = """<!DOCTYPE html>
 
             // 1. Who created you?
             if (lowerText.includes('who created you') || lowerText.includes('aara undakkiyath') || lowerText.includes('who made you') || lowerText.includes('aaranu undakkiyath') || lowerText.includes('creator')) {
-                return "Sufiyan created me! (This is information provided by my owner)";
+                return "Sufiyan is my creator. (This is information provided by my owner)";
             }
 
             // 2. Is Sufiyan in love? / Love questions
@@ -165,7 +165,7 @@ html_content = """<!DOCTYPE html>
 
             // 3. Food questions / Bakshanam kazhicho?
             if (lowerText.includes('bakshanam') || lowerText.includes('kazhicho') || lowerText.includes('food') || lowerText.includes('choor') || lowerText.includes('chayakkucho') || lowerText.includes('eaten')) {
-                return "Njan AI aayatukond bakshanam kazhikkarilla! Pakshe Sufiyan time-inu bakshanam okke kazhikkarund. Ningal kazhicho?";
+                return "Njan AI aayathukond bakshanam kazhikkarilla! Ningal kazhicho?";
             }
 
             // 4. Age / About Sufiyan
@@ -175,16 +175,30 @@ html_content = """<!DOCTYPE html>
 
             // 5. Greetings
             if (lowerText.includes('hi') || lowerText.includes('hello') || lowerText.includes('hey') || lowerText.includes('da') || lowerText.includes('machane')) {
-                return "Hi! Njan Sufiyante custom AI assistant aanu. Enthokke und visheshangal?";
+                return "Hi! Enthokke und visheshangal?";
             }
 
             // 6. How are you / Vishesham
             if (lowerText.includes('enthokke und') || lowerText.includes('how are you') || lowerText.includes('sukhamano') || lowerText.includes('vishesham')) {
-                return "Nalla sugham! Ningalkk enthokke und visheshangal?";
+                return "Nalla sukham! Ningalkk enthokke und visheshangal?";
             }
 
-            // 7. Default Smart Fallback Response
-            return "Njan Sufiyante custom AI assistant aanu. Enikku English, Malayalam, Hindi, pinne Manglish language-il samsarikkan pattum!";
+            // 7. Math / Simple Calculation support
+            try {
+                if (/^[0-9+\-*\/()\s]+$/.test(text)) {
+                    return "Answer: " + eval(text);
+                }
+            } catch(e) {}
+
+            // 8. Natural Fallback Responses (Repeat repetitive introduction completely removed)
+            const fallbackResponses = [
+                "Sheri, parayoo! Entha chodikkan ullath?",
+                "Kettilla, onnukoodi parayaamo?",
+                "Njan manassilaakki. Vere enthenkilum visheshangalo chodyangalo undo?",
+                "Aaha, anganeyano! Ningal enthanu udeshichath enn kooduthal parayaamo?"
+            ];
+            
+            return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
         }
 
         function sendMessage() {
@@ -203,7 +217,7 @@ html_content = """<!DOCTYPE html>
             input.value = '';
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // Generate AI Response with smart rules
+            // Generate AI Response
             setTimeout(() => {
                 const aiMsg = document.createElement('div');
                 aiMsg.className = 'message ai';
@@ -221,4 +235,4 @@ html_content = """<!DOCTYPE html>
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html_content)
 
-print("Updated index.html with food logic successfully.")
+print("Fixed index.html created successfully.")
