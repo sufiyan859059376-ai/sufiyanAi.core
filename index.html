@@ -5,6 +5,11 @@ html_content = """<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sufiyan's AI Assistant</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #0f172a, #1e293b);
@@ -13,7 +18,6 @@ html_content = """<!DOCTYPE html>
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
             padding: 20px;
         }
         .card {
@@ -21,40 +25,159 @@ html_content = """<!DOCTYPE html>
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 16px;
-            padding: 30px;
-            max-width: 500px;
+            padding: 25px;
+            max-width: 550px;
             width: 100%;
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .header {
             text-align: center;
         }
         h1 {
             font-size: 1.8rem;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             color: #38bdf8;
         }
         p {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: #cbd5e1;
-            line-height: 1.6;
+            line-height: 1.5;
         }
         .badge {
             display: inline-block;
             background-color: #0284c7;
             color: #ffffff;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             padding: 4px 12px;
             border-radius: 20px;
-            margin-top: 15px;
+            margin-top: 8px;
             font-weight: bold;
+        }
+        .chat-box {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            height: 280px;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .message {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+        .message.ai {
+            background: #1e293b;
+            color: #e2e8f0;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .message.user {
+            background: #0284c7;
+            color: #ffffff;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+        input[type="text"] {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: #f8fafc;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input[type="text"]:focus {
+            border-color: #38bdf8;
+        }
+        button {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #0369a1;
         }
     </style>
 </head>
 <body>
     <div class="card">
-        <h1>Sufiyan's Custom AI</h1>
-        <p>Hello! I am Sufiyan's AI assistant. I communicate in English, Malayalam, Hindi, and Manglish.</p>
-        <div class="badge">Created by Sufiyan</div>
+        <div class="header">
+            <h1>Sufiyan's Custom AI</h1>
+            <p>Hello! I am Sufiyan's AI assistant. Ask me anything in English, Malayalam, Hindi, or Manglish!</p>
+            <div class="badge">Created by Sufiyan</div>
+        </div>
+
+        <div class="chat-box" id="chatBox">
+            <div class="message ai">
+                Hello! Njan Sufiyante custom AI assistant aanu. Enthokke und visheshangal?
+            </div>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendMessage()">
+            <button onclick="sendMessage()">Send</button>
+        </div>
     </div>
+
+    <script>
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const chatBox = document.getElementById('chatBox');
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            // Add User Message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.textContent = text;
+            chatBox.appendChild(userMsg);
+
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Logic for AI Response
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'message ai';
+                
+                const lowerText = text.toLowerCase();
+
+                if (lowerText.includes('who created you') || lowerText.includes('aara undakkiyath') || lowerText.includes('who made you') || lowerText.includes('aaranu undakkiyath')) {
+                    aiMsg.textContent = "Sufiyan is my creator. (As provided by my owner)";
+                } else if (lowerText.includes('love') || lowerText.includes('pranayam') || lowerText.includes('is sufiyan in love') || lowerText.includes('sufiyannu love undo')) {
+                    aiMsg.textContent = "Und, pakshe njan ath aarodum parayilla. Avan parayaruth enn paranjittund.";
+                } else {
+                    aiMsg.textContent = "Njan Sufiyante custom AI assistant aanu! Ente aduthekk vanna ella friends, teachers, pinne family members-num swagatham!";
+                }
+
+                chatBox.appendChild(aiMsg);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 500);
+        }
+    </script>
 </body>
 </html>
 """
