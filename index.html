@@ -1,253 +1,294 @@
-html_content = """<!DOCTYPE html>
-<html lang="en">
+
+<!DOCTYPE html>
+<html lang="ml">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sufiyan's AI Assistant</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: #f8fafc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 25px;
-            max-width: 550px;
-            width: 100%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .header {
-            text-align: center;
-        }
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-            color: #38bdf8;
-        }
-        p {
-            font-size: 0.95rem;
-            color: #cbd5e1;
-            line-height: 1.5;
-        }
-        .badge {
-            display: inline-block;
-            background-color: #0284c7;
-            color: #ffffff;
-            font-size: 0.8rem;
-            padding: 4px 12px;
-            border-radius: 20px;
-            margin-top: 8px;
-            font-weight: bold;
-        }
-        .chat-box {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            height: 340px;
-            overflow-y: auto;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .message {
-            max-width: 80%;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            word-wrap: break-word;
-        }
-        .message.ai {
-            background: #1e293b;
-            color: #e2e8f0;
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .message.user {
-            background: #0284c7;
-            color: #ffffff;
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-        }
-        .input-area {
-            display: flex;
-            gap: 10px;
-        }
-        input[type="text"] {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 12px 16px;
-            border-radius: 8px;
-            color: #f8fafc;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        input[type="text"]:focus {
-            border-color: #38bdf8;
-        }
-        button {
-            background: #0284c7;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        button:hover {
-            background: #0369a1;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sufiyan AI</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: #101827;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 500px;
+    margin: 25px auto;
+    background: #1e293b;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 5px 25px #0006;
+}
+
+header {
+    background: #2563eb;
+    text-align: center;
+    padding: 18px;
+}
+
+header h2 { margin: 0; }
+header p { margin-bottom: 0; }
+
+#chat {
+    height: 390px;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.message {
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 12px;
+    max-width: 85%;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.user {
+    background: #2563eb;
+    margin-left: auto;
+}
+
+.bot {
+    background: #334155;
+    margin-right: auto;
+}
+
+.controls {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+}
+
+input {
+    min-width: 0;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+}
+
+#question { flex: 1; }
+
+button {
+    padding: 11px 14px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:disabled { opacity: .5; }
+
+.clear {
+    background: #dc2626;
+    margin: 0 10px 10px;
+}
+
+.settings {
+    padding: 10px;
+}
+
+.settings input {
+    width: 100%;
+    margin-top: 7px;
+}
+
+.note {
+    color: #cbd5e1;
+    font-size: 12px;
+}
+</style>
 </head>
+
 <body>
-    <div class="card">
-        <div class="header">
-            <h1>Sufiyan's Smart AI</h1>
-            <p>Ask me anything in English, Malayalam, Hindi, or Manglish!</p>
-            <div class="badge">Created by Sufiyan</div>
-        </div>
 
-        <div class="chat-box" id="chatBox">
-            <div class="message ai">
-                Hi! Enthokke und visheshangal? Ente srishtavaya Sufiyane pattiye allengil enthenkilum chodichollo!
-            </div>
-        </div>
+<div class="container">
 
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="Type your question..." onkeydown="if(event.key==='Enter') sendMessage()">
-            <button onclick="sendMessage()">Send</button>
-        </div>
+<header>
+    <h2>🤖 SUFIYAN AI</h2>
+    <p>Ask Me Anything ❤️</p>
+</header>
+
+<div class="settings">
+    <label>Gemini API Key:</label>
+    <input id="apiKey" type="password"
+           placeholder="Paste your API key here">
+    <p class="note">API Key ഈ പേജിൽ മാത്രം ഉപയോഗിക്കുന്നു.
+    മറ്റുള്ളവർക്ക് ഈ പേജ് നൽകുമ്പോൾ Key സുരക്ഷിതമല്ല.</p>
+</div>
+
+<div id="chat">
+    <div class="message bot">
+        ഹായ്! ഞാൻ Sufiyan AI ആണ് ❤️
+        എന്തും ചോദിക്കാം!
     </div>
+</div>
 
-    <script>
-        function getAIResponse(text) {
-            const cleanText = text.trim();
-            const lowerText = cleanText.toLowerCase();
+<div class="controls">
+    <input id="question" placeholder="Ask anything..."
+           onkeydown="if(event.key==='Enter') sendMessage()">
+    <button id="sendBtn" onclick="sendMessage()">Send</button>
+</div>
 
-            // 1. Who created you / Who is Sufiyan?
-            if (lowerText.includes('who created you') || lowerText.includes('aara undakkiyath') || lowerText.includes('who made you') || lowerText.includes('aaranu undakkiyath') || lowerText.includes('creator') || lowerText.includes('sufiyan aaran') || lowerText.includes('sufiyan aaranu') || lowerText.includes('who is sufiyan') || lowerText.includes('sufiyane patti')) {
-                return "enne nirmicha ente srishtaavan sufiyan,avan ippol 10th classilaan. vere oru karyam!! avan verum 16 vayassil thanne enikk jeevan thannu";
-            }
+<button class="clear" onclick="clearChat()">Clear Chat</button>
 
-            // 2. Is Sufiyan in love?
-            if (lowerText.includes('love') || lowerText.includes('pranayam') || lowerText.includes('sufiyannu love undo') || lowerText.includes('sufiyanik love undo') || lowerText.includes('is sufiyan in love') || lowerText.includes('pennund')) {
-                return "und pakshe parayaruth enn ennod parazhitund. one side lone aane";
-            }
+</div>
 
-            // 3. Favourite thing / Gaming
-            if (lowerText.includes('ishtapetta karyam') || lowerText.includes('favourite') || lowerText.includes('gaming') || lowerText.includes('istham') || lowerText.includes('hobby')) {
-                return "gaming aanu";
-            }
+<script>
 
-            // 4. Food / Bakshanam
-            if (lowerText.includes('bakshanam') || lowerText.includes('kazhicho') || lowerText.includes('food') || lowerText.includes('choor') || lowerText.includes('chaya') || lowerText.includes('eaten')) {
-                return "Njan AI aayathukond bakshanam kazhikkarilla! Ningal kazhicho?";
-            }
+const chat = document.getElementById("chat");
+const history = [];
 
-            // 5. Greetings
-            if (lowerText.includes('hi') || lowerText.includes('hello') || lowerText.includes('hey') || lowerText.includes('da') || lowerText.includes('machane')) {
-                return "Hello! Enthokke und vishesham? Entha ariyanullath?";
-            }
+function addMessage(text, type) {
+    const div = document.createElement("div");
+    div.className = "message " + type;
+    div.textContent = text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+}
 
-            // 6. Math Calculations
-            try {
-                if (/^[0-9+\-*\/()\s.]+$/.test(cleanText)) {
-                    return "Answer: " + eval(cleanText);
+function isCreatorQuestion(q) {
+    const patterns = [
+        "who created you",
+        "who made you",
+        "who built you",
+        "who is your creator",
+        "ആരാണ് നിന്നെ ഉണ്ടാക്കിയത്",
+        "നിന്നെ ഉണ്ടാക്കിയത് ആര്",
+        "ആരാണ് നിന്നെ സൃഷ്ടിച്ചത്",
+        "ninne undakiyath",
+        "ninne undakkiyath",
+        "aaran ninne undakiyath",
+        "aran ninne undakiyath",
+        "aara ninne undakiyath"
+    ];
+
+    return patterns.some(p => q.includes(p));
+}
+
+async function sendMessage() {
+
+    const input = document.getElementById("question");
+    const button = document.getElementById("sendBtn");
+
+    const question = input.value.trim();
+    const apiKey = document.getElementById("apiKey").value.trim();
+
+    if (!question) return;
+
+    addMessage(question, "user");
+    input.value = "";
+
+    // Special Sufiyan answer
+    if (isCreatorQuestion(question.toLowerCase())) {
+
+        const answer =
+        "verum 16 vayyasulla 10th padikuna sufiyan aan enne undakiyath";
+
+        addMessage(answer, "bot");
+
+        history.push(
+            { role: "user", parts: [{ text: question }] },
+            { role: "model", parts: [{ text: answer }] }
+        );
+
+        return;
+    }
+
+    if (!apiKey) {
+        addMessage("ആദ്യം Gemini API Key നൽകുക. ❤️", "bot");
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Thinking...";
+
+    try {
+
+        history.push({
+            role: "user",
+            parts: [{ text: question }]
+        });
+
+        const response = await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
+          {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-goog-api-key": apiKey
+            },
+            body: JSON.stringify({
+                system_instruction: {
+                    parts: [{
+                        text: `You are Sufiyan AI, a friendly and helpful chatbot.
+Answer questions on all topics as accurately as possible.
+Prefer Malayalam when the user speaks Malayalam or Manglish.
+You can also answer in English.
+Be honest if you do not know something.
+If asked who created you, say exactly:
+verum 16 vayyasulla 10th padikuna sufiyan aan enne undakiyath`
+                    }]
+                },
+                contents: history,
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 1000
                 }
-            } catch(e) {}
+            })
+          }
+        );
 
-            // 7. General Human Questions & Full Conversational Intelligence
-            if (lowerText.startsWith('what is') || lowerText.startsWith('enthannu')) {
-                const topic = cleanText.replace(/what is|enthannu/gi, '').trim();
-                return topic ? topic + " ennu vechaal athoru vishayam aanu. Ithine patti kooduthal ariyaan Sufiyannodu chodikkuka!" : "Athu nalla oru chodyam aanu!";
-            }
+        const data = await response.json();
 
-            if (lowerText.startsWith('who is') || lowerText.startsWith('aaranu')) {
-                const person = cleanText.replace(/who is|aaranu/gi, '').trim();
-                return person ? person + " aaraannu ariyamo? Athu patti kooduthal details Sufiyan tharum." : "Aha, aaraannu parayoo!";
-            }
-
-            if (lowerText.includes('evide') || lowerText.includes('where')) {
-                return "Athu evideyaanennu kandupidikkan Google Maps nokkuka allengil Sufiyannodu chodikkuka!";
-            }
-
-            if (lowerText.includes('eppol') || lowerText.includes('when')) {
-                return "Athinte samayam krithyamayi ariyavunnathu Sufiyannu aanu!";
-            }
-
-            if (lowerText.includes('why') || lowerText.includes('enthukondu') || lowerText.includes('enthina')) {
-                return "Athinepatti kooduthal kaaranangal chinthichu nokkuka, allel Sufiyannodu choikku!";
-            }
-
-            if (lowerText.includes('how') || lowerText.includes('enganeya')) {
-                return "Ithu cheyyanulla vazhikal Sufiyanoottu chodichu manassilakkuka!";
-            }
-
-            // 8. Smart Fallback for general chats
-            const conversationalResponses = [
-                "Njan manassilaakki! Ithine patti kooduthal parayaamo?",
-                "Nalla chodyam! Enikku ariyunna kaaryangal njan parayam, pakshe Sufiyannu ithu kooduthal nannayi ariyam.",
-                "Aaha, anganeyano! Ningalkk vere enthenkilum ariyanamndo?",
-                "Sheri, njan dharichu. Ente srishtavaya Sufiyane patti allel vere enthenkilum chodikkane!"
-            ];
-
-            return conversationalResponses[Math.floor(Math.random() * conversationalResponses.length)];
+        if (!response.ok) {
+            throw new Error(
+                data.error?.message || "API request failed"
+            );
         }
 
-        function sendMessage() {
-            const input = document.getElementById('userInput');
-            const chatBox = document.getElementById('chatBox');
-            const text = input.value.trim();
+        const answer =
+          data.candidates?.[0]?.content?.parts
+          ?.map(part => part.text || "")
+          .join("") || "ഉത്തരം ലഭിച്ചില്ല.";
 
-            if (!text) return;
+        addMessage(answer, "bot");
 
-            // Add User Message
-            const userMsg = document.createElement('div');
-            userMsg.className = 'message user';
-            userMsg.textContent = text;
-            chatBox.appendChild(userMsg);
+        history.push({
+            role: "model",
+            parts: [{ text: answer }]
+        });
 
-            input.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
+    } catch (error) {
 
-            // Generate AI Response
-            setTimeout(() => {
-                const aiMsg = document.createElement('div');
-                aiMsg.className = 'message ai';
-                aiMsg.textContent = getAIResponse(text);
+        history.pop();
 
-                chatBox.appendChild(aiMsg);
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 400);
-        }
-    </script>
+        addMessage(
+            "Error: " + error.message +
+            "\nAPI Key പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.",
+            "bot"
+        );
+
+    } finally {
+        button.disabled = false;
+        button.textContent = "Send";
+        input.focus();
+    }
+}
+
+function clearChat() {
+    chat.innerHTML = "";
+    history.length = 0;
+    addMessage("Chat cleared! എന്താണ് പുതിയ ചോദ്യം?", "bot");
+}
+
+</script>
+
 </body>
 </html>
-"""
-
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
-
-print("Updated index.html generated with all new details.")
